@@ -89,7 +89,9 @@ export const updateImage = async (req, res) => {
     }
 
     if (!req.file) {
-      return res.status(400).json({ message: "Tidak ada file yang diupload" });
+      return res
+        .status(400)
+        .json({ status: 102, message: "Tidak ada file yang diupload" });
     }
 
     const user = req.user;
@@ -111,6 +113,10 @@ export const updateImage = async (req, res) => {
     const fileUrl = `${req.protocol}://${req.get(
       "host"
     )}/public/images/profiles/${req.file.filename}`;
+
+    await prisma.user.update({ where: {id: user.userId}, data: {
+      profile_image: fileUrl
+    }})
 
     res.status(200).json({
       status: 0,
@@ -145,14 +151,12 @@ export const checkBalance = async (request, response) => {
         .status(400)
         .json({ status: 102, message: "Error please try again" });
 
-    response
-      .status(200)
-      .json({
-        status: 0,
-        message: "Get Balance Berhasil!",
-        data: { balance: existingUser.balance },
-      });
+    response.status(200).json({
+      status: 0,
+      message: "Get Balance Berhasil!",
+      data: { balance: existingUser.balance },
+    });
   } catch (error) {
-      res.status(500).json({ message: "Error please try again" });
+    res.status(500).json({ message: "Error please try again" });
   }
 };

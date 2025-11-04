@@ -16,7 +16,9 @@ export const register = async (request, response) => {
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser)
-      return response.status(400).json({ message: "Email sudah terdaftar" });
+      return response
+        .status(400)
+        .json({ status: 102, message: "Email sudah terdaftar" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -55,7 +57,7 @@ export const login = async (request, response) => {
 
   if (!isMatch)
     return response
-      .status(400)
+      .status(401)
       .json({ status: 103, message: "Username atau password salah" });
 
   const token = jwt.sign({ userId: existingUser.id }, JWT_SECRET, {

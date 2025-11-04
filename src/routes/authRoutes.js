@@ -9,8 +9,7 @@ const validateRequest = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       status: 102,
-      message: "Validation failed",
-      errors: errors
+      message: errors
         .array()
         .map((err) => err.msg)
         .toString(),

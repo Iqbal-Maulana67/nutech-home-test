@@ -53,8 +53,6 @@ export const topupService = async (request, response) => {
       },
     });
 
-    console.log(updatedBalance.balance);
-
     response.status(200).json({
       status: 0,
       message: "Top Up Balance Berhasil",
@@ -95,7 +93,7 @@ export const transaction = async (req, res) => {
     if (parseInt(user.balance) < parseInt(services.service_tariff))
       return res
         .status(400)
-        .json({ status: "102", message: "Balance tidak cukup" });
+        .json({ status: 102, message: "Balance tidak cukup" });
 
     await prisma.user.update({
       where: { id: req.user.userId },
@@ -138,8 +136,6 @@ export const transaction = async (req, res) => {
       invoiceFormat += padNumber(invoiceTotal);
     }
 
-    console.log(invoiceFormat);
-
     const createdData = await prisma.history.create({
       data: {
         invoice_number: invoiceFormat,
@@ -151,8 +147,8 @@ export const transaction = async (req, res) => {
     });
 
     res.status(200).json({
+      status: 0,
       message: "Sukses",
-      services: services,
       data: createdData,
     });
   } catch (error) {
@@ -164,16 +160,29 @@ export const transaction = async (req, res) => {
 };
 
 export const transactionHistory = async (req, res) => {
-  const offset = req.query.offset;
-  const limit = req.query.limit;
+  try {
+    const offset = req.query.offset;
+    const limit = req.query.limit;
 
-  let data = await prisma.history.findMany({
-    where: { userId: req.user.userId },
-    skip: parseInt(offset),
-    ...(limit && { take: parseInt(limit) }),
-    orderBy: { created_on: "desc" },
-  });
+    let data = await prisma.history.findMany({
+      where: { userId: req.user.userId },
+      skip: parseInt(offset),
+      ...(limit && { take: parseInt(limit) }),
+      orderBy: { created_on: "desc" },
+    });
 
-  if (!data.length) data = { status: 0, message: "Data kosong" };
-  res.status(200).json({ data });
+    if (!data.length) data = { status: 0, message: "Data kosong" };
+    res
+      .status(200)
+      .json({ status: 0, message: "Get History Berhasil", data: {
+        offset: offset,
+        ...(limit && { limit: limit }),
+        records: data,
+      } });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error please try again",
+    });
+  }
 };
