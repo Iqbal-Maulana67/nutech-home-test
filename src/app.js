@@ -3,6 +3,8 @@ import path from "path";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import bannerRoutes from "./routes/bannerRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js";
 
 dotenv.config();
 
@@ -15,6 +17,8 @@ app.use("/public", express.static(path.resolve("src/public")));
 
 app.use("/", authRoutes);
 app.use("/", profileRoutes);
+app.use("/", bannerRoutes);
+app.use("/", serviceRoutes);
 
 app.use((error, req, res, next) => {
   console.error("Error: ", error);
