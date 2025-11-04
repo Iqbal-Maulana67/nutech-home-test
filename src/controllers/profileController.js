@@ -110,9 +110,7 @@ export const updateImage = async (req, res) => {
         .status(400)
         .json({ status: 102, message: "Error please try again" });
 
-    const fileUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/public/images/profiles/${req.file.filename}`;
+    const fileUrl = req.file.path;
 
     await prisma.user.update({ where: {id: user.userId}, data: {
       profile_image: fileUrl
