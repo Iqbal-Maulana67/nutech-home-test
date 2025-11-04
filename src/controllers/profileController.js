@@ -108,10 +108,9 @@ export const updateImage = async (req, res) => {
         .status(400)
         .json({ status: 102, message: "Error please try again" });
 
-    
-    const fileUrl = `${req.protocol}://${req.get("host")}/public/images/profiles/${
-      req.file.filename
-    }`;
+    const fileUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/public/images/profiles/${req.file.filename}`;
 
     res.status(200).json({
       status: 0,
@@ -125,5 +124,35 @@ export const updateImage = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Error please try again" });
+  }
+};
+
+export const checkBalance = async (request, response) => {
+  try {
+    const user = request.user;
+
+    if (!user)
+      return response
+        .status(400)
+        .json({ status: 102, message: "User tidak ditemukan" });
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id: user.userId },
+    });
+
+    if (!existingUser)
+      return response
+        .status(400)
+        .json({ status: 102, message: "Error please try again" });
+
+    response
+      .status(200)
+      .json({
+        status: 0,
+        message: "Get Balance Berhasil!",
+        data: { balance: existingUser.balance },
+      });
+  } catch (error) {
+      res.status(500).json({ message: "Error please try again" });
   }
 };

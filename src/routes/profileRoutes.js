@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
 import { verifyToken } from "../middlewares/authMiddleware.js";
-import { show, update, updateImage } from "../controllers/profileController.js";
+import { checkBalance, show, update, updateImage } from "../controllers/profileController.js";
 import upload from "../middlewares/profileMiddleware.js";
 
 const router = Router();
@@ -29,5 +29,7 @@ router.put("/profile/update", [
 ], validateRequest, verifyToken, update);
 
 router.put("/profile/image", verifyToken, upload.single("image"), updateImage);
+
+router.get("/balance", verifyToken, checkBalance);
 
 export default router;
