@@ -36,9 +36,10 @@ async function main() {
         description: "Lerem Ipsum Dolor sit amet",
       },
     ],
+    skipDuplicates: true,
   });
 
-  await prisma.service.createMany({
+  await prisma.services.createMany({
     data: [
       {
         service_code: "PAJAK",
@@ -113,6 +114,7 @@ async function main() {
         service_tariff: 300000,
       },
     ],
+    skipDuplicates: true,
   });
 }
 
