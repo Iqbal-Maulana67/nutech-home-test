@@ -19,7 +19,7 @@ const validateRequest = (req, res, next) => {
 };
 
 router.post(
-  "/register",
+  "/registration",
   [
     body("first_name").notEmpty().withMessage("First Name kosong"),
     body("last_name").notEmpty().withMessage("Last Name kosong"),
