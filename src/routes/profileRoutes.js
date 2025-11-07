@@ -28,7 +28,7 @@ router.put("/profile/update", [
   body("last_name").notEmpty().withMessage('Last name kosong')
 ], validateRequest, verifyToken, update);
 
-router.put("/profile/image", verifyToken, upload.single("image"), updateImage);
+router.put("/profile/image", verifyToken, upload.single("file"), updateImage);
 
 router.get("/balance", verifyToken, checkBalance);
 
